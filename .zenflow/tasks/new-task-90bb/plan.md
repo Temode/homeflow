@@ -20,7 +20,8 @@ Create a Product Requirements Document (PRD) based on the feature description.
 
 Save the PRD to `{@artifacts_path}/requirements.md`.
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
+<!-- chat-id: 80f38170-ece0-4a00-8979-ea63171e2d5b -->
 
 Create a technical specification based on the PRD in `{@artifacts_path}/requirements.md`.
 
@@ -56,3 +57,5 @@ This step should be replaced with detailed implementation tasks from the Plannin
 If Planning didn't replace this step, execute the tasks in `{@artifacts_path}/plan.md`, updating checkboxes as you go. Run planned tests/lint and record results in plan.md.
 
 ### [ ] Step: Building the every page  ot the app
+
+### [ ] Step: Build and make the Landing page
