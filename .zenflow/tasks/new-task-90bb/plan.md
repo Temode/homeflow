@@ -7,7 +7,8 @@
 
 ## Workflow Steps
 
-### [ ] Step: Requirements
+### [x] Step: Requirements
+<!-- chat-id: 1eadd60c-1717-4c4e-8da1-e3e1b6e36caf -->
 
 Create a Product Requirements Document (PRD) based on the feature description.
 
@@ -53,3 +54,5 @@ Save to `{@artifacts_path}/plan.md`.
 This step should be replaced with detailed implementation tasks from the Planning step.
 
 If Planning didn't replace this step, execute the tasks in `{@artifacts_path}/plan.md`, updating checkboxes as you go. Run planned tests/lint and record results in plan.md.
+
+### [ ] Step: Building the every page  ot the app
