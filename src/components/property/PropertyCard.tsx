@@ -1,10 +1,11 @@
-import { MapPin, Home, Maximize2, Car } from 'lucide-react'
+import { MapPin, Home, Maximize2, Car, Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Property } from '../../types/property.types'
 import { Badge } from '../ui/Badge'
 import { Avatar } from '../ui/Avatar'
 import { formatPrice } from '../../utils/formatters'
 import { cn } from '../../utils/cn'
+import { useFavorites } from '../../hooks/useFavorites'
 
 interface PropertyCardProps {
   property: Property
@@ -14,6 +15,14 @@ interface PropertyCardProps {
 export function PropertyCard({ property, className }: PropertyCardProps) {
   const agent = property.profiles
   const mainImage = property.images[0] || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800'
+  const { isFavorite, toggleFavorite } = useFavorites()
+  const favorited = isFavorite(property.id)
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    toggleFavorite(property.id)
+  }
 
   return (
     <Link 
@@ -38,6 +47,23 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
             <Badge variant="premium">Featured</Badge>
           )}
         </div>
+        <button
+          onClick={handleFavoriteClick}
+          className={cn(
+            'absolute top-4 right-4 p-2 rounded-full backdrop-blur-sm transition-all duration-300',
+            'hover:scale-110 active:scale-95',
+            favorited 
+              ? 'bg-white/90 text-danger' 
+              : 'bg-white/60 text-white hover:bg-white/90 hover:text-danger'
+          )}
+        >
+          <Heart 
+            className={cn(
+              'w-5 h-5 transition-all duration-300',
+              favorited && 'fill-current'
+            )} 
+          />
+        </button>
       </div>
 
       <div className="p-6">

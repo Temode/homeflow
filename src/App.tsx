@@ -9,6 +9,7 @@ import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
 import DashboardAgent from './pages/DashboardAgent'
 import NewListing from './pages/NewListing'
+import { Favorites } from './pages/Favorites'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -20,6 +21,15 @@ function App() {
         <Route path="/propriete/:id" element={<PropertyDetail />} />
         <Route path="/connexion" element={<SignIn />} />
         <Route path="/inscription" element={<SignUp />} />
+        
+        <Route
+          path="/favoris"
+          element={
+            <ProtectedRoute>
+              <Favorites />
+            </ProtectedRoute>
+          }
+        />
         
         <Route
           path="/dashboard"

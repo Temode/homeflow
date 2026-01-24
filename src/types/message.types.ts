@@ -1,22 +1,36 @@
-import { Profile } from './user.types'
+import { Database } from './database.types'
 
-export interface Message {
-  id: string
-  conversation_id: string
-  sender_id: string
-  content: string
-  is_read: boolean
-  created_at: string
+export type Message = Database['public']['Tables']['messages']['Row'] & {
+  sender?: {
+    id: string
+    full_name: string | null
+    avatar_url: string | null
+  }
 }
 
-export interface Conversation {
-  id: string
-  property_id: string | null
-  participant_1: string
-  participant_2: string
-  created_at: string
-  profiles?: Profile[]
-  messages?: Message[]
-  lastMessage?: Message
-  unreadCount?: number
+export type Conversation = Database['public']['Tables']['conversations']['Row'] & {
+  property?: {
+    id: string
+    title: string
+    images: string[]
+    price: number
+  }
+  participant_1_profile?: {
+    id: string
+    full_name: string | null
+    avatar_url: string | null
+    is_verified: boolean
+  }
+  participant_2_profile?: {
+    id: string
+    full_name: string | null
+    avatar_url: string | null
+    is_verified: boolean
+  }
+  last_message?: Message
+  unread_count?: number
+}
+
+export type ConversationWithMessages = Conversation & {
+  messages: Message[]
 }

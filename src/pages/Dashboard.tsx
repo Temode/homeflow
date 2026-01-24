@@ -6,38 +6,44 @@ import { PropertyStats } from '../components/property/PropertyStats'
 import { PropertyGrid } from '../components/property/PropertyGrid'
 import { useAuth } from '../hooks/useAuth'
 import { Property } from '../types/property.types'
-import { supabase } from '../services/supabase'
+import { favoritesService } from '../services/favorites.service'
 
 export default function Dashboard() {
   const { user } = useAuth()
   const [favorites, setFavorites] = useState<Property[]>([])
+  const [favoritesCount, setFavoritesCount] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (user) {
       fetchFavorites()
+      fetchFavoritesCount()
     }
   }, [user])
 
   const fetchFavorites = async () => {
     try {
-      const { data, error } = await supabase
-        .from('favorites')
-        .select('property_id, properties(*, profiles(*))')
-        .eq('user_id', user!.id)
-        .limit(3)
-
-      if (error) throw error
-
+      setLoading(true)
+      const data = await favoritesService.getFavorites(user!.id)
       const favoritedProperties = data
         .map((fav: any) => fav.properties)
         .filter(Boolean)
+        .slice(0, 3)
 
       setFavorites(favoritedProperties)
     } catch (error) {
       console.error('Error fetching favorites:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchFavoritesCount = async () => {
+    try {
+      const count = await favoritesService.getFavoritesCount(user!.id)
+      setFavoritesCount(count)
+    } catch (error) {
+      console.error('Error fetching favorites count:', error)
     }
   }
 
@@ -55,7 +61,7 @@ export default function Dashboard() {
           <PropertyStats
             icon={Heart}
             label="Favoris"
-            value={favorites.length}
+            value={favoritesCount}
             color="primary"
           />
           <PropertyStats
