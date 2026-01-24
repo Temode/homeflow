@@ -28,3 +28,5 @@ export default function Badge({ children, variant = 'info', className }: BadgePr
     </span>
   )
 }
+
+export { Badge }

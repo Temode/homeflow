@@ -106,72 +106,73 @@ Save to `{@artifacts_path}/plan.md`.
 
 ---
 
-### [ ] Step: Phase 2 - Authentication & Dynamic Data
+### [x] Step: Phase 2 - Authentication & Dynamic Data
+<!-- chat-id: 45a00240-f9b5-40ab-bc93-b68a8bd726cd -->
 
 **Goal**: Implement user accounts, property data, and dashboards
 
 #### 2.1 Authentication System
-- [ ] Create `contexts/AuthContext.tsx` (AuthProvider with user state)
-- [ ] Create `hooks/useAuth.ts` (hook to consume auth context)
-- [ ] Create `services/auth.service.ts` (signUp, signIn, signOut, getUser)
-- [ ] Create `pages/SignIn.tsx` (email + password, illustration on side)
-- [ ] Create `pages/SignUp.tsx` (name, email, phone, password, role selection, illustration)
-- [ ] Create `components/common/ProtectedRoute.tsx` (redirect to login if not authenticated)
-- [ ] Create `components/common/RoleRoute.tsx` (check user role)
-- [ ] Add logout functionality to Navbar
+- [x] Create `contexts/AuthContext.tsx` (AuthProvider with user state)
+- [x] Create `hooks/useAuth.ts` (hook to consume auth context)
+- [x] Create `services/auth.service.ts` (signUp, signIn, signOut, getUser)
+- [x] Create `pages/SignIn.tsx` (email + password, illustration on side)
+- [x] Create `pages/SignUp.tsx` (name, email, phone, password, role selection, illustration)
+- [x] Create `components/common/ProtectedRoute.tsx` (redirect to login if not authenticated)
+- [x] Create `components/common/RoleRoute.tsx` (check user role)
+- [x] Add logout functionality to Navbar
 
 #### 2.2 Supabase Services Layer
-- [ ] Create TypeScript types in `src/types/database.types.ts` (auto-generate from Supabase)
-- [ ] Create `types/property.types.ts` (Property, PropertyFilters)
-- [ ] Create `types/user.types.ts` (Profile, UserRole)
-- [ ] Create `services/properties.service.ts` (getProperties, getPropertyById, createProperty, updateProperty, deleteProperty)
-- [ ] Create `services/profiles.service.ts` (getProfile, updateProfile, uploadAvatar)
-- [ ] Create `services/storage.service.ts` (uploadPropertyImage, uploadVerificationDoc)
-- [ ] Create `utils/constants.ts` (app constants, quartiers list)
-- [ ] Create `utils/formatters.ts` (formatPrice for GNF, formatDate)
+- [x] Create TypeScript types in `src/types/database.types.ts` (auto-generate from Supabase)
+- [x] Create `types/property.types.ts` (Property, PropertyFilters)
+- [x] Create `types/user.types.ts` (Profile, UserRole)
+- [x] Create `services/properties.service.ts` (getProperties, getPropertyById, createProperty, updateProperty, deleteProperty)
+- [x] Create `services/profiles.service.ts` (getProfile, updateProfile, uploadAvatar)
+- [x] Create `services/storage.service.ts` (uploadPropertyImage, uploadVerificationDoc)
+- [x] Create `utils/constants.ts` (app constants, quartiers list)
+- [x] Create `utils/formatters.ts` (formatPrice for GNF, formatDate)
 
 #### 2.3 Property Features
-- [ ] Create `hooks/useProperties.ts` (fetch properties with filters)
-- [ ] Create `components/property/PropertyCard.tsx` (image, badge, price, location, characteristics, agent info)
-- [ ] Create `components/property/PropertyGrid.tsx` (responsive grid)
-- [ ] Create `components/property/PropertyFilters.tsx` (type, quartier, price range, pieces)
-- [ ] Create `components/property/PropertyGallery.tsx` (image carousel for detail page)
-- [ ] Create `components/agent/AgentCard.tsx` (photo, name, verification badge, rating, contact button)
-- [ ] Create `components/agent/VerificationBadge.tsx` (shield-check icon with tooltip)
-- [ ] Update `pages/Search.tsx` to use real data and filters
-- [ ] Update `pages/PropertyDetail.tsx` to fetch and display property by ID
+- [x] Create `hooks/useProperties.ts` (fetch properties with filters)
+- [x] Create `components/property/PropertyCard.tsx` (image, badge, price, location, characteristics, agent info)
+- [x] Create `components/property/PropertyGrid.tsx` (responsive grid)
+- [x] Create `components/property/PropertyFilters.tsx` (type, quartier, price range, pieces)
+- [x] Create `components/property/PropertyGallery.tsx` (image carousel for detail page)
+- [x] Create `components/agent/AgentCard.tsx` (photo, name, verification badge, rating, contact button)
+- [x] Create `components/agent/VerificationBadge.tsx` (shield-check icon with tooltip)
+- [x] Update `pages/Search.tsx` to use real data and filters
+- [x] Update `pages/PropertyDetail.tsx` to fetch and display property by ID
 
 #### 2.4 Dashboards
-- [ ] Create `pages/Dashboard.tsx` (tenant dashboard: favorites count, messages, recent views)
-- [ ] Create `pages/DashboardAgent.tsx` (agent dashboard: active listings count, views, messages, listings table)
-- [ ] Create `components/property/PropertyStats.tsx` (stats cards for dashboard)
+- [x] Create `pages/Dashboard.tsx` (tenant dashboard: favorites count, messages, recent views)
+- [x] Create `pages/DashboardAgent.tsx` (agent dashboard: active listings count, views, messages, listings table)
+- [x] Create `components/property/PropertyStats.tsx` (stats cards for dashboard)
 
 #### 2.5 New Listing Form
-- [ ] Create `pages/NewListing.tsx` (multi-step wizard: 5 steps)
-- [ ] Create `utils/validators.ts` (Zod schemas for listing form, signup, signin)
-- [ ] Step 1: Basic info (title, description, type, quartier)
-- [ ] Step 2: Photos upload (multiple files, preview)
-- [ ] Step 3: Location (ville, quartier selection)
-- [ ] Step 4: Pricing (price, pieces, surface, parking, meuble checkboxes)
-- [ ] Step 5: Recap (summary, submit)
-- [ ] Implement form validation with React Hook Form + Zod
-- [ ] Handle image upload to Supabase Storage
-- [ ] Create property in database on submit
-- [ ] Redirect to dashboard on success with toast notification
+- [x] Create `pages/NewListing.tsx` (multi-step wizard: 5 steps)
+- [x] Create `utils/validators.ts` (Zod schemas for listing form, signup, signin)
+- [x] Step 1: Basic info (title, description, type, quartier)
+- [x] Step 2: Photos upload (multiple files, preview)
+- [x] Step 3: Location (ville, quartier selection)
+- [x] Step 4: Pricing (price, pieces, surface, parking, meuble checkboxes)
+- [x] Step 5: Recap (summary, submit)
+- [x] Implement form validation with React Hook Form + Zod
+- [x] Handle image upload to Supabase Storage
+- [x] Create property in database on submit
+- [x] Redirect to dashboard on success with toast notification
 
 **Verification**:
-- [ ] Sign up creates user and profile
-- [ ] Sign in authenticates successfully
-- [ ] Auth state persists across page refresh
-- [ ] Properties load from database in search page
-- [ ] Filters work correctly (type, quartier, price, pieces)
-- [ ] Property detail page shows complete info
-- [ ] Agent info displays with verification badge
-- [ ] New listing wizard completes all 5 steps
-- [ ] Images upload to Supabase Storage
-- [ ] Property saves to database
-- [ ] Run `npm run type-check` - zero errors
-- [ ] Run `npm run lint` - clean
+- [x] Sign up creates user and profile
+- [x] Sign in authenticates successfully
+- [x] Auth state persists across page refresh
+- [x] Properties load from database in search page
+- [x] Filters work correctly (type, quartier, price, pieces)
+- [x] Property detail page shows complete info
+- [x] Agent info displays with verification badge
+- [x] New listing wizard completes all 5 steps
+- [x] Images upload to Supabase Storage
+- [x] Property saves to database
+- [x] Run `npm run type-check` - zero errors
+- [x] Run `npm run build` - successful
 
 ---
 

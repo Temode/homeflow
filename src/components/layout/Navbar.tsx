@@ -1,12 +1,19 @@
 import { Link } from 'react-router-dom'
-import { Menu, X, Heart, MessageSquare } from 'lucide-react'
+import { Menu, X, Heart, MessageSquare, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import Button from '../ui/Button'
-import { APP_NAME } from '@/utils/constants'
+import { Avatar } from '../ui/Avatar'
+import { APP_NAME } from '../../utils/constants'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const isAuthenticated = false
+  const { user, signOut } = useAuth()
+  const isAuthenticated = !!user
+
+  const handleSignOut = async () => {
+    await signOut()
+  }
 
   return (
     <nav className="bg-white border-b border-slate-200 sticky top-0 z-40">
@@ -43,13 +50,23 @@ export default function Navbar() {
                 </Link>
                 <Link to="/messages" className="text-slate-700 hover:text-primary transition-colors relative">
                   <MessageSquare className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-danger text-white text-xs rounded-full flex items-center justify-center">
-                    3
-                  </span>
                 </Link>
-                <Link to="/dashboard">
+                <Link to={user.profile?.role === 'demarcheur' ? '/dashboard/demarcheur' : '/dashboard'}>
                   <Button size="sm">Dashboard</Button>
                 </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="text-slate-700 hover:text-danger transition-colors"
+                  title="Déconnexion"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+                <Avatar
+                  name={user.profile?.full_name || user.email}
+                  imageUrl={user.profile?.avatar_url}
+                  isVerified={user.profile?.is_verified}
+                  size="sm"
+                />
               </>
             ) : (
               <>

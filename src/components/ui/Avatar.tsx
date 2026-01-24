@@ -2,8 +2,7 @@ import { cn } from '@/utils/cn'
 import { ShieldCheck } from 'lucide-react'
 
 interface AvatarProps {
-  src?: string
-  alt?: string
+  imageUrl?: string | null
   name?: string
   isVerified?: boolean
   size?: 'sm' | 'md' | 'lg'
@@ -11,8 +10,7 @@ interface AvatarProps {
 }
 
 export default function Avatar({ 
-  src, 
-  alt, 
+  imageUrl, 
   name, 
   isVerified = false, 
   size = 'md',
@@ -43,8 +41,8 @@ export default function Avatar({
           className
         )}
       >
-        {src ? (
-          <img src={src} alt={alt || name} className="w-full h-full object-cover" />
+        {imageUrl ? (
+          <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
         ) : (
           getInitials(name)
         )}
@@ -57,3 +55,5 @@ export default function Avatar({
     </div>
   )
 }
+
+export { Avatar }
