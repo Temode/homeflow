@@ -1,0 +1,14 @@
+node_modules
+dist
+dist-ssr
+*.local
+.env.local
+.env
+*.log
+.vscode
+.DS_Store
+.cache
+build
+coverage
+*.swp
+*.swo
