@@ -37,6 +37,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
         <img 
           src={mainImage} 
           alt={property.title}
+          loading="lazy"
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
         <div className="absolute top-4 left-4 flex gap-2">
