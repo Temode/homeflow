@@ -5,10 +5,12 @@ import Button from '../ui/Button'
 import { Avatar } from '../ui/Avatar'
 import { APP_NAME } from '../../utils/constants'
 import { useAuth } from '../../hooks/useAuth'
+import { useMessages } from '../../hooks/useMessages'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user, signOut } = useAuth()
+  const { unreadCount } = useMessages()
   const isAuthenticated = !!user
 
   const handleSignOut = async () => {
@@ -50,6 +52,11 @@ export default function Navbar() {
                 </Link>
                 <Link to="/messages" className="text-slate-700 hover:text-primary transition-colors relative">
                   <MessageSquare className="w-5 h-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-danger text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
                 <Link to={user.profile?.role === 'demarcheur' ? '/dashboard/demarcheur' : '/dashboard'}>
                   <Button size="sm">Dashboard</Button>
@@ -123,7 +130,7 @@ export default function Navbar() {
                   </Link>
                   <Link to="/messages" onClick={() => setIsMenuOpen(false)}>
                     <Button variant="outline" size="sm" className="w-full">
-                      Messages (3)
+                      Messages {unreadCount > 0 && `(${unreadCount})`}
                     </Button>
                   </Link>
                   <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>

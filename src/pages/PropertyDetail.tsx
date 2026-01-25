@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { MapPin, Home, Maximize2, Car, ArrowLeft } from 'lucide-react'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
@@ -9,10 +9,43 @@ import { PropertyGallery } from '../components/property/PropertyGallery'
 import { AgentCard } from '../components/agent/AgentCard'
 import { formatPrice } from '../utils/formatters'
 import { useProperty } from '../hooks/useProperties'
+import { useAuth } from '../hooks/useAuth'
+import { useMessages } from '../hooks/useMessages'
+import { toast } from 'react-hot-toast'
 
 export default function PropertyDetail() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const { user } = useAuth()
   const { property, loading, error } = useProperty(id!)
+  const { createConversation } = useMessages()
+
+  const handleContact = async () => {
+    if (!user) {
+      toast.error('Vous devez être connecté pour contacter le démarcheur')
+      navigate('/connexion')
+      return
+    }
+
+    if (!property || !agent) {
+      toast.error('Informations du démarcheur introuvables')
+      return
+    }
+
+    if (user.id === agent.id) {
+      toast.error('Vous ne pouvez pas vous contacter vous-même')
+      return
+    }
+
+    try {
+      const conversation = await createConversation(agent.id, property.id)
+      if (conversation) {
+        navigate(`/messages?conversation=${conversation.id}`)
+      }
+    } catch (error) {
+      console.error('Error creating conversation:', error)
+    }
+  }
 
   if (loading) {
     return (
@@ -137,7 +170,7 @@ export default function PropertyDetail() {
             <div className="space-y-6">
               {agent && (
                 <div className="sticky top-8">
-                  <AgentCard agent={agent} onContact={() => console.log('Contact agent')} />
+                  <AgentCard agent={agent} onContact={handleContact} />
                 </div>
               )}
             </div>

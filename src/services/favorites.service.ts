@@ -1,7 +1,6 @@
 import { supabase } from './supabase'
 import { Database } from '../types/database.types'
 
-type Favorite = Database['public']['Tables']['favorites']['Row']
 type FavoriteInsert = Database['public']['Tables']['favorites']['Insert']
 
 export const favoritesService = {

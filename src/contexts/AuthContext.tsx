@@ -9,6 +9,7 @@ interface AuthContextType {
   signIn: (data: SignInData) => Promise<void>
   signUp: (data: SignUpData) => Promise<void>
   signOut: () => Promise<void>
+  refreshUser: () => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -72,8 +73,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  const refreshUser = async () => {
+    try {
+      const user = await authService.getCurrentUser()
+      setUser(user)
+    } catch (error) {
+      console.error('Error refreshing user:', error)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, refreshUser }}>
       {children}
     </AuthContext.Provider>
   )

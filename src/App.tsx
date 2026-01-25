@@ -10,6 +10,9 @@ import Dashboard from './pages/Dashboard'
 import DashboardAgent from './pages/DashboardAgent'
 import NewListing from './pages/NewListing'
 import { Favorites } from './pages/Favorites'
+import { Messages } from './pages/Messages'
+import { Profile } from './pages/Profile'
+import { ProfileAgent } from './pages/ProfileAgent'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -19,6 +22,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/recherche" element={<Search />} />
         <Route path="/propriete/:id" element={<PropertyDetail />} />
+        <Route path="/demarcheur/:id" element={<ProfileAgent />} />
         <Route path="/connexion" element={<SignIn />} />
         <Route path="/inscription" element={<SignUp />} />
         
@@ -27,6 +31,24 @@ function App() {
           element={
             <ProtectedRoute>
               <Favorites />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/messages"
+          element={
+            <ProtectedRoute>
+              <Messages />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/profil"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
