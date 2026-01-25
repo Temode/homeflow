@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { signInSchema, SignInFormData } from '../utils/validators'
 import { useAuth } from '../hooks/useAuth'
 import { Input } from '../components/ui/Input'
@@ -24,9 +25,12 @@ export default function SignIn() {
     setIsLoading(true)
     try {
       await signIn(data)
+      toast.success('Connexion réussie!')
       navigate('/')
     } catch (error) {
       console.error(error)
+      const message = error instanceof Error ? error.message : 'Erreur de connexion. Vérifiez vos identifiants.'
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { MessageSquare } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useMessages } from '../hooks/useMessages'
 import { ConversationList } from '../components/messaging/ConversationList'
 import { ChatView } from '../components/messaging/ChatView'
+import { EmptyState } from '../components/common/EmptyState'
 import { Conversation } from '../types/message.types'
 
 export function Messages() {
@@ -54,10 +56,24 @@ export function Messages() {
     )
   }
 
+  if (conversations.length === 0) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <EmptyState
+          icon={MessageSquare}
+          title="Aucune conversation"
+          description="Vous n'avez pas encore de conversations. Commencez par contacter un démarcheur depuis une annonce."
+          actionLabel="Voir les annonces"
+          onAction={() => navigate('/recherche')}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="h-screen flex flex-col">
       <div className="flex-1 flex overflow-hidden">
-        <div className="w-full md:w-96 lg:w-[400px] bg-white">
+        <div className={`${selectedConversation ? 'hidden md:block' : 'block'} w-full md:w-96 lg:w-[400px] bg-white border-r border-slate-200`}>
           <ConversationList
             conversations={conversations}
             selectedConversationId={selectedConversation?.id}
@@ -66,12 +82,13 @@ export function Messages() {
           />
         </div>
 
-        <div className="hidden md:flex flex-1">
+        <div className={`${selectedConversation ? 'flex' : 'hidden md:flex'} flex-1`}>
           <ChatView
             conversation={selectedConversation}
             messages={messages}
             currentUserId={user!.id}
             onSendMessage={handleSendMessage}
+            onBack={() => setSelectedConversation(null)}
           />
         </div>
       </div>

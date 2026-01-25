@@ -13,6 +13,7 @@ import { Favorites } from './pages/Favorites'
 import { Messages } from './pages/Messages'
 import { Profile } from './pages/Profile'
 import { ProfileAgent } from './pages/ProfileAgent'
+import { Verification } from './pages/Verification'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -81,6 +82,17 @@ function App() {
             <ProtectedRoute>
               <RoleRoute allowedRoles={['demarcheur']}>
                 <NewListing />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/verification"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowedRoles={['demarcheur']}>
+                <Verification />
               </RoleRoute>
             </ProtectedRoute>
           }

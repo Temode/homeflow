@@ -23,7 +23,7 @@ export function useFavorites() {
     try {
       setIsLoading(true)
       const favorites = await favoritesService.getFavorites(user.id)
-      const ids = new Set(favorites.map((f: any) => f.property_id))
+      const ids = new Set(favorites.map((f: { property_id: string }) => f.property_id))
       setFavoriteIds(ids)
     } catch (error) {
       console.error('Error loading favorites:', error)

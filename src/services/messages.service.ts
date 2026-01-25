@@ -21,7 +21,7 @@ export const messagesService = {
     if (error) throw error
 
     const conversationsWithLastMessage = await Promise.all(
-      data.map(async (conv: any) => {
+      data.map(async (conv) => {
         const { data: lastMessage } = await supabase
           .from('messages')
           .select('*')

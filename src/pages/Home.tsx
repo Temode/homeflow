@@ -7,8 +7,14 @@ import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import Card from '@/components/ui/Card'
 import Avatar from '@/components/ui/Avatar'
+import { useScrollAnimation } from '@/hooks/useScrollAnimation'
+import { cn } from '@/utils/cn'
 
 export default function Home() {
+  const stepsAnimation = useScrollAnimation()
+  const featuresAnimation = useScrollAnimation()
+  const testimonialsAnimation = useScrollAnimation()
+  
   const stats = [
     { value: '2800+', label: 'Annonces' },
     { value: '450+', label: 'Démarcheurs' },
@@ -112,7 +118,7 @@ export default function Home() {
             <p className="text-xl text-slate-600">Simple, rapide et sécurisé</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div ref={stepsAnimation.ref} className={cn('grid grid-cols-1 md:grid-cols-4 gap-8 scroll-animation', stepsAnimation.isVisible && 'visible')}>
             {steps.map((step, index) => {
               const Icon = step.icon
               return (
@@ -143,7 +149,7 @@ export default function Home() {
             <p className="text-xl text-slate-600">Tout ce dont vous avez besoin</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div ref={featuresAnimation.ref} className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 scroll-animation', featuresAnimation.isVisible && 'visible')}>
             {features.map((feature, index) => {
               const Icon = feature.icon
               return (
@@ -169,7 +175,7 @@ export default function Home() {
             <p className="text-xl text-slate-600">Ce que nos utilisateurs disent</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div ref={testimonialsAnimation.ref} className={cn('grid grid-cols-1 md:grid-cols-3 gap-8 scroll-animation', testimonialsAnimation.isVisible && 'visible')}>
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="p-6">
                 <div className="flex items-center mb-4">

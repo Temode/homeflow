@@ -28,7 +28,7 @@ export function Favorites() {
     try {
       setIsLoading(true)
       const favorites = await favoritesService.getFavorites(user.id)
-      const props = favorites.map((f: any) => f.properties).filter(Boolean)
+      const props = favorites.map((f: { properties: Property }) => f.properties).filter(Boolean)
       setProperties(props)
     } catch (error) {
       console.error('Error loading favorites:', error)

@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { SearchX } from 'lucide-react'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
 import { PropertyGrid } from '../components/property/PropertyGrid'
 import { PropertyFilters } from '../components/property/PropertyFilters'
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton'
+import { EmptyState } from '../components/common/EmptyState'
 import { useProperties } from '../hooks/useProperties'
 import { PropertyFilters as Filters } from '../types/property.types'
 
@@ -42,6 +44,14 @@ export default function Search() {
                     <LoadingSkeleton key={i} />
                   ))}
                 </div>
+              ) : properties.length === 0 ? (
+                <EmptyState
+                  icon={SearchX}
+                  title="Aucune propriété trouvée"
+                  description="Aucune propriété ne correspond à vos critères de recherche. Essayez de modifier vos filtres."
+                  actionLabel="Réinitialiser les filtres"
+                  onAction={() => setFilters({})}
+                />
               ) : (
                 <PropertyGrid properties={properties} />
               )}

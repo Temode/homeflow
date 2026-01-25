@@ -26,7 +26,7 @@ export default function Dashboard() {
       setLoading(true)
       const data = await favoritesService.getFavorites(user!.id)
       const favoritedProperties = data
-        .map((fav: any) => fav.properties)
+        .map((fav: { properties: Property }) => fav.properties)
         .filter(Boolean)
         .slice(0, 3)
 

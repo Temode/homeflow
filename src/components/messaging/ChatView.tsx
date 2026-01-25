@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Info } from 'lucide-react'
+import { Info, ArrowLeft } from 'lucide-react'
 import { Conversation, Message } from '../../types/message.types'
 import { Avatar } from '../ui/Avatar'
 import { MessageBubble } from './MessageBubble'
@@ -10,6 +10,7 @@ interface ChatViewProps {
   messages: Message[]
   currentUserId: string
   onSendMessage: (content: string) => void
+  onBack?: () => void
 }
 
 export function ChatView({
@@ -17,6 +18,7 @@ export function ChatView({
   messages,
   currentUserId,
   onSendMessage,
+  onBack,
 }: ChatViewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -48,6 +50,14 @@ export function ChatView({
     <div className="h-full flex flex-col">
       <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
         <div className="flex items-center gap-3">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="md:hidden p-2 text-slate-600 hover:text-primary transition-colors -ml-2"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
           <Avatar
             name={otherParticipant?.full_name || 'Utilisateur'}
             imageUrl={otherParticipant?.avatar_url}

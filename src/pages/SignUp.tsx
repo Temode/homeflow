@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { signUpSchema, SignUpFormData } from '../utils/validators'
 import { useAuth } from '../hooks/useAuth'
 import { Input } from '../components/ui/Input'
@@ -28,9 +29,12 @@ export default function SignUp() {
     setIsLoading(true)
     try {
       await signUp(data)
+      toast.success('Compte créé avec succès! Bienvenue sur HomeFlow.')
       navigate('/')
     } catch (error) {
       console.error(error)
+      const message = error instanceof Error ? error.message : 'Erreur lors de la création du compte'
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }
