@@ -397,6 +397,7 @@ Save to `{@artifacts_path}/plan.md`.
 ---
 
 ### [ ] Step: Final Review & Documentation
+<!-- chat-id: bfd36cdb-c46d-477e-b08d-d7eab10988bb -->
 
 **Goal**: Ensure code quality and document the project
 
