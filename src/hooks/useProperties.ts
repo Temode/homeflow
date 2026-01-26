@@ -22,7 +22,7 @@ export function useProperties(filters?: PropertyFilters) {
     }
 
     fetchProperties()
-  }, [filters?.type, filters?.quartier, filters?.priceMin, filters?.priceMax, filters?.pieces, filters?.search])
+  }, [filters?.type, filters?.quartier, filters?.priceMin, filters?.priceMax, filters?.pieces, filters?.search, filters?.status, filters?.limit])
 
   return { properties, loading, error }
 }

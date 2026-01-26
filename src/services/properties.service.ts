@@ -6,8 +6,11 @@ export const propertiesService = {
     let query = supabase
       .from('properties')
       .select('*, profiles(*)')
-      .eq('status', 'active')
       .order('created_at', { ascending: false })
+
+    // Apply status filter (default to 'active' if not specified)
+    const status = filters?.status || 'active'
+    query = query.eq('status', status)
 
     if (filters?.type) {
       query = query.eq('type', filters.type)
@@ -31,6 +34,11 @@ export const propertiesService = {
 
     if (filters?.search) {
       query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`)
+    }
+
+    // Apply limit if specified
+    if (filters?.limit) {
+      query = query.limit(filters.limit)
     }
 
     const { data, error } = await query

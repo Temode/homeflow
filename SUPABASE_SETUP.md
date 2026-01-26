@@ -5,12 +5,13 @@ Ce guide détaille toutes les étapes nécessaires pour configurer Supabase pour
 ## Table des matières
 
 1. [Création du projet](#1-création-du-projet)
-2. [Exécution des migrations](#2-exécution-des-migrations)
-3. [Configuration des buckets Storage](#3-configuration-des-buckets-storage)
-4. [Activation de Realtime](#4-activation-de-realtime)
-5. [Récupération des credentials](#5-récupération-des-credentials)
-6. [Seed des données de démo](#6-seed-des-données-de-démo-optionnel)
-7. [Vérification](#7-vérification)
+2. [Configuration de l'authentification](#2-configuration-de-lauthentification)
+3. [Exécution des migrations](#3-exécution-des-migrations)
+4. [Configuration des buckets Storage](#4-configuration-des-buckets-storage)
+5. [Activation de Realtime](#5-activation-de-realtime)
+6. [Récupération des credentials](#6-récupération-des-credentials)
+7. [Seed des données de démo](#7-seed-des-données-de-démo-optionnel)
+8. [Vérification](#8-vérification)
 
 ---
 
@@ -27,14 +28,32 @@ Ce guide détaille toutes les étapes nécessaires pour configurer Supabase pour
 
 ---
 
-## 2. Exécution des migrations
+## 2. Configuration de l'authentification
 
-### 2.1 Accéder au SQL Editor
+⚠️ **IMPORTANT** : Par défaut, Supabase nécessite une confirmation par email pour créer un compte. Pour le développement local, vous devez désactiver cette option.
+
+1. Allez dans **Authentication** > **Providers** dans votre dashboard Supabase
+2. Cliquez sur **Email** dans la liste des providers
+3. Sous "Confirm email", **désactivez** l'option "Enable email confirmations"
+4. Cliquez sur **Save**
+
+Alternativement, vous pouvez configurer un service SMTP pour l'envoi d'emails :
+1. Allez dans **Project Settings** > **Auth**
+2. Configurez votre serveur SMTP dans la section "SMTP Settings"
+3. Les utilisateurs recevront un email de confirmation à l'inscription
+
+**Pour la production**, il est fortement recommandé de garder la confirmation par email activée pour des raisons de sécurité.
+
+---
+
+## 3. Exécution des migrations
+
+### 3.1 Accéder au SQL Editor
 
 1. Dans votre projet Supabase, allez dans **SQL Editor** (icône de terminal dans la sidebar)
 2. Cliquez sur **New query**
 
-### 2.2 Exécuter la migration initiale
+### 3.2 Exécuter la migration initiale
 
 1. Ouvrez le fichier `supabase/migrations/20260124_initial_schema.sql` dans votre éditeur de code
 2. Copiez tout le contenu du fichier
@@ -43,7 +62,7 @@ Ce guide détaille toutes les étapes nécessaires pour configurer Supabase pour
 
 Vous devriez voir un message de succès: `Success. No rows returned`
 
-### 2.3 Vérifier les tables créées
+### 3.3 Vérifier les tables créées
 
 1. Allez dans **Table Editor** (icône de tableau dans la sidebar)
 2. Vous devriez voir ces tables:
@@ -57,9 +76,9 @@ Vous devriez voir un message de succès: `Success. No rows returned`
 
 ---
 
-## 3. Configuration des buckets Storage
+## 4. Configuration des buckets Storage
 
-### 3.1 Créer les buckets
+### 4.1 Créer les buckets
 
 1. Allez dans **Storage** (icône de dossier dans la sidebar)
 2. Créez les 3 buckets suivants:
@@ -82,7 +101,7 @@ Vous devriez voir un message de succès: `Success. No rows returned`
 - File size limit: 5 MB
 - Allowed MIME types: `image/png, image/jpeg, image/jpg, image/webp, application/pdf`
 
-### 3.2 Ajouter les policies RLS
+### 4.2 Ajouter les policies RLS
 
 Pour chaque bucket, vous devez ajouter des policies pour permettre les uploads.
 

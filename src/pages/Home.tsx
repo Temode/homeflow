@@ -7,13 +7,19 @@ import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import Card from '@/components/ui/Card'
 import Avatar from '@/components/ui/Avatar'
+import { PropertyGrid } from '@/components/property/PropertyGrid'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
+import { useProperties } from '@/hooks/useProperties'
 import { cn } from '@/utils/cn'
 
 export default function Home() {
   const stepsAnimation = useScrollAnimation()
   const featuresAnimation = useScrollAnimation()
   const testimonialsAnimation = useScrollAnimation()
+  const propertiesAnimation = useScrollAnimation()
+  
+  // Récupérer les 6 premières propriétés actives
+  const { properties, loading } = useProperties({ status: 'active', limit: 6 })
   
   const stats = [
     { value: '2800+', label: 'Annonces' },
@@ -167,6 +173,30 @@ export default function Home() {
       </section>
 
       <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Biens en vedette
+            </h2>
+            <p className="text-xl text-slate-600">Découvrez nos meilleures offres</p>
+          </div>
+
+          <div ref={propertiesAnimation.ref} className={cn('scroll-animation', propertiesAnimation.isVisible && 'visible')}>
+            <PropertyGrid properties={properties} loading={loading} />
+          </div>
+
+          <div className="text-center mt-12">
+            <Link to="/recherche">
+              <Button variant="outline" size="lg">
+                Voir toutes les annonces
+                <ChevronRight className="w-5 h-5 ml-2" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">

@@ -30,4 +30,6 @@ export interface PropertyFilters {
   priceMax?: number
   pieces?: number
   search?: string
+  status?: PropertyStatus
+  limit?: number
 }
