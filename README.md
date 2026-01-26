@@ -37,11 +37,12 @@ npm install
 
 3. **Configuration Supabase**
 
-Créez un projet sur [Supabase](https://supabase.com/dashboard):
-
-- Créez un nouveau projet
-- Allez dans **SQL Editor** et exécutez le fichier `supabase/migrations/20260124_initial_schema.sql`
-- (Optionnel) Exécutez `supabase/seed.sql` pour des données de démo
+Suivez le guide détaillé dans [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) pour:
+- Créer un projet Supabase
+- Exécuter les migrations
+- Configurer les buckets Storage
+- Activer Realtime
+- (Optionnel) Charger les données de démo
 
 4. **Variables d'environnement**
 
@@ -56,16 +57,7 @@ VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-5. **Configuration Storage Supabase** (optionnel mais recommandé)
-
-Dans votre dashboard Supabase, allez dans **Storage** et créez ces buckets:
-- `avatars` (public)
-- `property-images` (public)
-- `verification-documents` (privé)
-
-Ajoutez les policies RLS pour permettre les uploads authentifiés.
-
-6. **Lancer l'application**
+5. **Lancer l'application**
 ```bash
 npm run dev
 ```
@@ -182,6 +174,68 @@ Le fichier `supabase/seed.sql` contient:
 - 5 avis pour les agents
 - Conversations et messages de test
 
+## 🐛 Dépannage
+
+### L'application ne démarre pas
+
+- Vérifiez que Node.js 18+ est installé: `node --version`
+- Supprimez `node_modules` et réinstallez: `rm -rf node_modules && npm install`
+- Vérifiez que `.env.local` existe et contient les bonnes variables
+
+### Erreurs de connexion Supabase
+
+- Vérifiez que `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` sont corrects
+- Assurez-vous que les migrations ont été exécutées dans Supabase
+- Vérifiez que RLS est activé sur toutes les tables
+
+### Images ne s'affichent pas
+
+- Créez les buckets Storage dans Supabase: `avatars`, `property-images`, `verification-documents`
+- Vérifiez les policies RLS sur les buckets (les buckets `avatars` et `property-images` doivent être publics)
+
+### Messages en temps réel ne fonctionnent pas
+
+- Vérifiez que Realtime est activé sur la table `messages` dans Supabase
+- Vérifiez votre connexion internet
+- Rechargez la page
+
+### Erreurs TypeScript lors du build
+
+- Exécutez `npm run type-check` pour voir les erreurs détaillées
+- Assurez-vous que toutes les dépendances sont installées
+
+## ⚠️ Limitations connues
+
+### Version MVP
+
+Cette version MVP de HomeFlow comprend les fonctionnalités de base. Certaines fonctionnalités sont prévues pour les futures versions:
+
+**Fonctionnalités manquantes:**
+- Système de paiement intégré (prévu pour v2)
+- Système de réservation/visites (prévu pour v2)
+- Notifications push (prévu pour v2)
+- Application mobile native (prévu pour v3)
+- Recherche géolocalisée avancée (prévu pour v2)
+- Support multi-langues (prévu pour v2)
+
+**Limitations techniques:**
+- Upload d'images limité à 5 photos par propriété
+- Taille maximale par image: 5MB
+- Messagerie texte uniquement (pas de fichiers/images)
+- Pas de système de modération automatique des annonces
+- Vérification KYC manuelle (admin doit approuver manuellement dans la base de données)
+
+**Améliorations prévues:**
+- Amélioration des performances de recherche avec indexation
+- Système de cache pour les images
+- Optimisation du temps de chargement initial
+- Ajout de tests unitaires et d'intégration
+- Documentation API complète
+
+### Avertissements ESLint
+
+L'application contient actuellement 12 avertissements ESLint liés aux dépendances des hooks React. Ces avertissements sont acceptables pour le MVP et seront traités dans les futures versions pour améliorer la performance et éviter les re-rendus inutiles.
+
 ## 🤝 Contribution
 
 Les contributions sont les bienvenues ! 
@@ -191,6 +245,12 @@ Les contributions sont les bienvenues !
 3. Commit vos changements (`git commit -m 'Ajout de ma feature'`)
 4. Push vers la branche (`git push origin feature/ma-feature`)
 5. Ouvrez une Pull Request
+
+**Guidelines:**
+- Suivez les conventions de code existantes
+- Ajoutez des types TypeScript pour toutes les nouvelles fonctions
+- Testez vos changements localement
+- Mettez à jour la documentation si nécessaire
 
 ## 📄 Licence
 
