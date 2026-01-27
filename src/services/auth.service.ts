@@ -18,6 +18,7 @@ export const authService = {
   async signUp(data: SignUpData): Promise<AuthUser> {
     const { email, password, fullName, phone, role } = data
 
+    // Sign up user with metadata - profile will be created automatically by trigger
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -33,18 +34,26 @@ export const authService = {
     if (authError) throw authError
     if (!authData.user) throw new Error('Failed to create user')
 
+    // Wait a bit for the trigger to create the profile
+    await new Promise(resolve => setTimeout(resolve, 500))
+
+    // Try to fetch the profile (it should exist now thanks to the trigger)
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .insert({
-        id: authData.user.id,
-        full_name: fullName,
-        phone,
-        role,
-      })
-      .select()
+      .select('*')
+      .eq('id', authData.user.id)
       .single()
 
-    if (profileError) throw profileError
+    // If profile doesn't exist yet (rare case), return user without profile
+    // Profile will be available after confirmation/login
+    if (profileError) {
+      console.warn('Profile not found immediately after signup, will be created on confirmation:', profileError)
+      return {
+        id: authData.user.id,
+        email: authData.user.email!,
+        profile: null,
+      }
+    }
 
     return {
       id: authData.user.id,

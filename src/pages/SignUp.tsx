@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { signUpSchema, SignUpFormData } from '../utils/validators'
@@ -11,26 +11,52 @@ import { Button } from '../components/ui/Button'
 
 export default function SignUp() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { signUp } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+
+  // Get the redirect path if user was trying to access a protected page
+  const from = (location.state as any)?.from?.pathname || null
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      role: 'locataire',
+      role: 'visiteur',
     },
   })
+
+  const selectedRole = watch('role')
 
   const onSubmit = async (data: SignUpFormData) => {
     setIsLoading(true)
     try {
       await signUp(data)
       toast.success('Compte créé avec succès! Bienvenue sur HomeFlow.')
-      navigate('/')
+      
+      // Redirect based on role or original destination
+      if (from) {
+        // User was trying to access a specific page, redirect there
+        navigate(from, { replace: true })
+      } else {
+        // Redirect based on role
+        switch (data.role) {
+          case 'demarcheur':
+            navigate('/dashboard/demarcheur')
+            break
+          case 'visiteur':
+          case 'locataire':
+          case 'proprietaire':
+            navigate('/dashboard')
+            break
+          default:
+            navigate('/')
+        }
+      }
     } catch (error) {
       console.error(error)
       const message = error instanceof Error ? error.message : 'Erreur lors de la création du compte'
