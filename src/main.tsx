@@ -7,12 +7,13 @@ import App from './App.tsx'
 import './styles/globals.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // React.StrictMode temporairement désactivé pour debug - cause des AbortError avec Supabase
+  // <React.StrictMode>
     <ErrorBoundary>
       <AuthProvider>
         <App />
         <Toaster position="bottom-right" />
       </AuthProvider>
     </ErrorBoundary>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

@@ -36,12 +36,18 @@ export const propertiesService = {
       query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`)
     }
 
+    if (filters?.is_featured !== undefined) {
+      query = query.eq('is_featured', filters.is_featured)
+    }
+
     // Apply limit if specified
     if (filters?.limit) {
       query = query.limit(filters.limit)
     }
 
     const { data, error } = await query
+
+    console.log('[propertiesService] Query result - data:', data, 'error:', error)
 
     if (error) throw error
     return data || []

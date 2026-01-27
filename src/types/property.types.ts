@@ -32,4 +32,5 @@ export interface PropertyFilters {
   search?: string
   status?: PropertyStatus
   limit?: number
+  is_featured?: boolean
 }
