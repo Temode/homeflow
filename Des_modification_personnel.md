@@ -426,3 +426,90 @@ WHERE p.id = 'f84d018d-6d76-4075-9fea-357e3d0d8b36';
 4. **Images fictives** → Remplacement par des URLs Unsplash valides
 
 ---
+
+## Par Claude Opus 4.5 (Anthropic) + IA Supabase - 28 janvier 2026
+
+### Problème : Échec de l'inscription utilisateur
+
+#### Symptôme
+Lors de l'inscription d'un nouvel utilisateur :
+- Message d'erreur : "Échec de l'inscription"
+- Console : `new row violates row-level security policy for table "profiles"` (code 42501)
+- Le compte était créé dans `auth.users` mais pas de profil dans `profiles`
+
+#### Cause racine
+La politique RLS sur la table `profiles` exigeait `auth.uid() = id` pour l'INSERT. Problème : après `signUp()`, la session n'était pas encore active, donc `auth.uid()` retournait `null` et l'insertion échouait.
+
+### Corrections effectuées
+
+#### 1. Par l'IA Supabase : Trigger automatique de création de profil
+```sql
+-- Fonction trigger SECURITY DEFINER
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, role, created_at, updated_at)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    COALESCE(NEW.raw_user_meta_data->>'role', 'locataire'),
+    NOW(),
+    NOW()
+  ) ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger sur auth.users
+CREATE TRIGGER handle_new_user_trigger
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_new_user();
+```
+
+#### 2. Par l'IA Supabase : Ajout du rôle "visiteur"
+```sql
+-- Mise à jour du CHECK constraint
+ALTER TABLE public.profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check
+  CHECK (role = ANY (ARRAY['locataire', 'demarcheur', 'proprietaire', 'visiteur']));
+```
+
+#### 3. Par Claude : Adaptation du code frontend (`src/services/auth.service.ts`)
+```typescript
+// Avant : INSERT manuel du profil (échouait à cause de RLS)
+const { data: profile } = await supabase
+  .from('profiles')
+  .insert({ id: authData.user.id, ... })
+
+// Après : Attendre le trigger puis récupérer/mettre à jour le profil
+await new Promise(resolve => setTimeout(resolve, 500))
+
+const { data: profile } = await supabase
+  .from('profiles')
+  .select('*')
+  .eq('id', authData.user.id)
+  .single()
+
+// Mettre à jour avec les infos complètes (phone, etc.)
+const { data: updatedProfile } = await supabase
+  .from('profiles')
+  .update({ full_name: fullName, phone, role })
+  .eq('id', authData.user.id)
+  .select()
+  .single()
+```
+
+### Résultat
+✅ L'inscription fonctionne maintenant correctement :
+- Le trigger crée automatiquement le profil
+- Le code frontend récupère puis met à jour le profil avec les infos complètes
+- Le nouveau rôle "visiteur" est disponible
+
+### Leçon apprise
+Pour Supabase Auth avec RLS :
+1. Utiliser un **trigger SECURITY DEFINER** pour créer automatiquement le profil
+2. Le code frontend ne doit **pas** faire d'INSERT sur `profiles` directement après `signUp()`
+3. Récupérer le profil créé par le trigger puis le mettre à jour si nécessaire
+
+---
