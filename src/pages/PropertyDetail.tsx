@@ -1,16 +1,15 @@
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { MapPin, Home, Maximize2, Car, ArrowLeft, Share2, Heart, ChevronRight, Sofa, Check, Phone, Shield, Clock } from 'lucide-react'
+import { MapPin, Home, Maximize2, Car, ArrowLeft, Share2, Heart, ChevronRight, Sofa, Check } from 'lucide-react'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
 import { Card } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
-import { Avatar } from '../components/ui/Avatar'
 import { PropertyGallery } from '../components/property/PropertyGallery'
+import { AgentContactCard } from '../components/property/AgentContactCard'
 import { formatPrice } from '../utils/formatters'
 import { useProperty } from '../hooks/useProperties'
 import { useAuth } from '../hooks/useAuth'
-import { useMessages } from '../hooks/useMessages'
 import { useFavorites } from '../hooks/useFavorites'
 import { toast } from 'react-hot-toast'
 import { cn } from '../utils/cn'
@@ -68,35 +67,7 @@ export default function PropertyDetail() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { property, loading, error } = useProperty(id!)
-  const { createConversation } = useMessages()
   const { isFavorite, toggleFavorite } = useFavorites()
-
-  const handleContact = async () => {
-    if (!user) {
-      toast.error('Vous devez être connecté pour contacter le démarcheur')
-      navigate('/connexion')
-      return
-    }
-
-    if (!property || !agent) {
-      toast.error('Informations du démarcheur introuvables')
-      return
-    }
-
-    if (user.id === agent.id) {
-      toast.error('Vous ne pouvez pas vous contacter vous-même')
-      return
-    }
-
-    try {
-      const conversation = await createConversation(agent.id, property.id)
-      if (conversation) {
-        navigate(`/messages?conversation=${conversation.id}`)
-      }
-    } catch (error) {
-      console.error('Error creating conversation:', error)
-    }
-  }
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -346,72 +317,24 @@ export default function PropertyDetail() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Agent Card - Sticky */}
               <div className="lg:sticky lg:top-6">
                 {agent && (
-                  <Card className="p-6 overflow-hidden">
-                    <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
-                      <Shield className="w-4 h-4 text-primary" />
-                      <span>Annonce vérifiée</span>
-                    </div>
-
-                    <h3 className="font-display font-bold text-lg text-slate-900 mb-4">Contacter le démarcheur</h3>
-
-                    <div className="flex items-start gap-4 mb-6">
-                      <Avatar
-                        name={agent.full_name || 'Agent'}
-                        imageUrl={agent.avatar_url}
-                        isVerified={agent.is_verified}
-                        size="lg"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-slate-900 truncate">{agent.full_name || 'Agent'}</h4>
-                        <p className="text-sm text-slate-500">Démarcheur immobilier</p>
-                        {agent.is_verified && (
-                          <div className="flex items-center gap-1 mt-1 text-sm text-primary">
-                            <Shield className="w-3.5 h-3.5" />
-                            <span>Profil vérifié</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {agent.bio && (
-                      <p className="text-sm text-slate-600 mb-6 line-clamp-3">{agent.bio}</p>
-                    )}
-
-                    <div className="space-y-3">
-                      <Button onClick={handleContact} className="w-full">
-                        <Phone className="w-4 h-4 mr-2" />
-                        Contacter
-                      </Button>
-                    </div>
-
-                    <div className="flex items-center justify-center gap-2 mt-4 text-xs text-slate-400">
-                      <Clock className="w-3.5 h-3.5" />
-                      <span>Répond généralement sous 24h</span>
-                    </div>
-                  </Card>
+                  <AgentContactCard
+                    agent={{
+                      id: agent.id,
+                      full_name: agent.full_name || 'Agent',
+                      avatar_url: agent.avatar_url ?? undefined,
+                      is_verified: agent.is_verified,
+                      bio: agent.bio ?? undefined,
+                      phone: agent.phone ?? undefined,
+                      created_at: agent.created_at ?? undefined
+                    }}
+                    property={{
+                      id: property.id,
+                      title: property.title
+                    }}
+                  />
                 )}
-
-                {/* Safety Tips */}
-                <Card className="p-5 mt-4 bg-amber-50 border-amber-100">
-                  <h4 className="font-bold text-amber-900 mb-2 text-sm">Conseils de sécurité</h4>
-                  <ul className="text-xs text-amber-800 space-y-1.5">
-                    <li className="flex items-start gap-2">
-                      <Check className="w-3.5 h-3.5 mt-0.5 text-amber-600 flex-shrink-0" />
-                      <span>Ne payez jamais avant de visiter le bien</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-3.5 h-3.5 mt-0.5 text-amber-600 flex-shrink-0" />
-                      <span>Vérifiez les documents de propriété</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-3.5 h-3.5 mt-0.5 text-amber-600 flex-shrink-0" />
-                      <span>Privilégiez les démarcheurs vérifiés</span>
-                    </li>
-                  </ul>
-                </Card>
               </div>
             </div>
           </div>

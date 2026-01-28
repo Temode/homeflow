@@ -429,3 +429,12 @@ Save to `{@artifacts_path}/plan.md`.
 - [x] Demo data populated (seed.sql ready for user to run) ✅
 - [x] Ready for deployment or further development ✅
 
+
+### [x] Step: Authentification
+<!-- chat-id: 0d7515d9-5f51-4e9a-a0c3-a2964cf62cbd -->
+
+il faut que la creation de compte soit possible, 
+-Que l'utilisateur soit automatiquement connecté
+-Qu'il soit automatiquement redirigé vers le dashbord
+-Comprendre le type de user locataire: le user inscrit en tant que locataire mais qui n'a aucune location mais recherche des maisons pour louée, et le type de user qui s'inscrit ou se connecte en ayant déjà une maison loué, donc locaitaire pour de vrai)
+-Concevoir un dashord  fonctionnelle pour le locataire qui reflète la mission de HomFlow et des service qu'il offre

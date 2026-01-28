@@ -86,7 +86,10 @@ export function useMessages(conversationId?: string) {
       if (!user || !content.trim()) return
 
       try {
-        const message = await messagesService.sendMessage(convId, user.id, content)
+        const message = await messagesService.sendMessage({
+          conversation_id: convId,
+          content: content.trim()
+        })
         setMessages((prev) => [...prev, message])
         loadConversations()
         return message

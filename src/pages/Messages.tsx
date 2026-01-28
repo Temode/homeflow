@@ -16,9 +16,7 @@ export function Messages() {
 
   const {
     conversations,
-    messages,
     isLoading,
-    sendMessage,
   } = useMessages(selectedConversation?.id)
 
   useEffect(() => {
@@ -40,12 +38,6 @@ export function Messages() {
 
   const handleSelectConversation = (conversation: Conversation) => {
     setSelectedConversation(conversation)
-  }
-
-  const handleSendMessage = async (content: string) => {
-    if (selectedConversation) {
-      await sendMessage(selectedConversation.id, content)
-    }
   }
 
   if (isLoading) {
@@ -83,13 +75,16 @@ export function Messages() {
         </div>
 
         <div className={`${selectedConversation ? 'flex' : 'hidden md:flex'} flex-1`}>
-          <ChatView
-            conversation={selectedConversation}
-            messages={messages}
-            currentUserId={user!.id}
-            onSendMessage={handleSendMessage}
-            onBack={() => setSelectedConversation(null)}
-          />
+          {selectedConversation ? (
+            <ChatView
+              conversation={selectedConversation}
+              onBack={() => setSelectedConversation(null)}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full text-slate-500">
+              <p>Sélectionnez une conversation</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

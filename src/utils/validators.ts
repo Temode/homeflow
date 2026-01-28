@@ -10,7 +10,7 @@ export const signUpSchema = z.object({
   email: z.string().email('Email invalide'),
   phone: z.string().min(9, 'Numéro de téléphone invalide'),
   password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
-  role: z.enum(['locataire', 'demarcheur', 'proprietaire']),
+  role: z.enum(['visiteur', 'locataire', 'demarcheur', 'proprietaire']),
 })
 
 export const listingSchema = z.object({

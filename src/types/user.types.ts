@@ -1,4 +1,4 @@
-export type UserRole = 'locataire' | 'demarcheur' | 'proprietaire'
+export type UserRole = 'visiteur' | 'locataire' | 'demarcheur' | 'proprietaire'
 
 export interface Profile {
   id: string

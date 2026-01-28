@@ -1,8 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
-import toast from 'react-hot-toast'
 import { signUpSchema, SignUpFormData } from '../utils/validators'
 import { useAuth } from '../hooks/useAuth'
 import { Input } from '../components/ui/Input'
@@ -11,8 +10,12 @@ import { Button } from '../components/ui/Button'
 
 export default function SignUp() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { signUp } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+
+  // Get the redirect path if user was trying to access a protected page
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || null
 
   const {
     register,
@@ -21,7 +24,7 @@ export default function SignUp() {
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      role: 'locataire',
+      role: 'visiteur',
     },
   })
 
@@ -29,12 +32,28 @@ export default function SignUp() {
     setIsLoading(true)
     try {
       await signUp(data)
-      toast.success('Compte créé avec succès! Bienvenue sur HomeFlow.')
-      navigate('/')
+      
+      // Redirect based on role or original destination
+      if (from) {
+        // User was trying to access a specific page, redirect there
+        navigate(from, { replace: true })
+      } else {
+        // Redirect based on role
+        switch (data.role) {
+          case 'demarcheur':
+            navigate('/dashboard/demarcheur', { replace: true })
+            break
+          case 'visiteur':
+          case 'locataire':
+          case 'proprietaire':
+            navigate('/dashboard', { replace: true })
+            break
+          default:
+            navigate('/', { replace: true })
+        }
+      }
     } catch (error) {
       console.error(error)
-      const message = error instanceof Error ? error.message : 'Erreur lors de la création du compte'
-      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -91,7 +110,8 @@ export default function SignUp() {
                 {...register('role')}
                 error={errors.role?.message}
               >
-                <option value="locataire">Locataire</option>
+                <option value="visiteur">Visiteur (Je cherche un logement)</option>
+                <option value="locataire">Locataire (J'ai déjà un logement loué)</option>
                 <option value="demarcheur">Démarcheur immobilier</option>
                 <option value="proprietaire">Propriétaire</option>
               </Select>

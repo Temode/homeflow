@@ -6,8 +6,8 @@ import toast from 'react-hot-toast'
 interface AuthContextType {
   user: AuthUser | null
   loading: boolean
-  signIn: (data: SignInData) => Promise<void>
-  signUp: (data: SignUpData) => Promise<void>
+  signIn: (data: SignInData) => Promise<AuthUser>
+  signUp: (data: SignUpData) => Promise<AuthUser>
   signOut: () => Promise<void>
   refreshUser: () => Promise<void>
 }
@@ -42,6 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const user = await authService.signIn(data)
       setUser(user)
       toast.success('Connexion réussie!')
+      return user
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Échec de la connexion'
       toast.error(message)
@@ -54,6 +55,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const user = await authService.signUp(data)
       setUser(user)
       toast.success('Compte créé avec succès!')
+      return user
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Échec de l\'inscription'
       toast.error(message)

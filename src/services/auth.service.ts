@@ -18,6 +18,7 @@ export const authService = {
   async signUp(data: SignUpData): Promise<AuthUser> {
     const { email, password, fullName, phone, role } = data
 
+    // Sign up user with metadata - profile will be created automatically by trigger
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
