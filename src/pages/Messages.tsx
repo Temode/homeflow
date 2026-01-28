@@ -16,9 +16,7 @@ export function Messages() {
 
   const {
     conversations,
-    messages,
     isLoading,
-    sendMessage,
   } = useMessages(selectedConversation?.id)
 
   useEffect(() => {
@@ -40,12 +38,6 @@ export function Messages() {
 
   const handleSelectConversation = (conversation: Conversation) => {
     setSelectedConversation(conversation)
-  }
-
-  const handleSendMessage = async (content: string) => {
-    if (selectedConversation) {
-      await sendMessage(selectedConversation.id, content)
-    }
   }
 
   if (isLoading) {
@@ -86,9 +78,6 @@ export function Messages() {
           {selectedConversation ? (
             <ChatView
               conversation={selectedConversation}
-              messages={messages}
-              currentUserId={user!.id}
-              onSendMessage={handleSendMessage}
               onBack={() => setSelectedConversation(null)}
             />
           ) : (
