@@ -15,7 +15,7 @@ export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
 
   // Get the redirect path if user was trying to access a protected page
-  const from = (location.state as any)?.from?.pathname || null
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || null
 
   const {
     register,

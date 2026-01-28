@@ -6,6 +6,7 @@ import { PropertyGrid } from '../components/property/PropertyGrid'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { useAuth } from '../hooks/useAuth'
+import { useStats } from '../hooks/useStats'
 import { Property } from '../types/property.types'
 import { favoritesService } from '../services/favorites.service'
 import { propertiesService } from '../services/properties.service'
@@ -106,9 +107,9 @@ function QuickAction({ icon: Icon, title, description, href, color }: QuickActio
 
 export default function Dashboard() {
   const { user } = useAuth()
+  const { stats } = useStats()
   const [favorites, setFavorites] = useState<Property[]>([])
   const [recommended, setRecommended] = useState<Property[]>([])
-  const [favoritesCount, setFavoritesCount] = useState(0)
   const [loading, setLoading] = useState(true)
   
   const userRole = user?.profile?.role || 'visiteur'
@@ -119,7 +120,6 @@ export default function Dashboard() {
   useEffect(() => {
     if (user) {
       fetchFavorites()
-      fetchFavoritesCount()
       fetchRecommended()
     }
   }, [user])
@@ -138,15 +138,6 @@ export default function Dashboard() {
       console.error('Error fetching favorites:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const fetchFavoritesCount = async () => {
-    try {
-      const count = await favoritesService.getFavoritesCount(user!.id)
-      setFavoritesCount(count)
-    } catch (error) {
-      console.error('Error fetching favorites count:', error)
     }
   }
 
@@ -206,27 +197,27 @@ export default function Dashboard() {
           <StatCard
             icon={Heart}
             label="Propriétés sauvegardées"
-            value={favoritesCount}
+            value={stats.favoritesCount}
             color="rose"
             href="/favoris"
           />
           <StatCard
             icon={MessageSquare}
             label="Messages non lus"
-            value={0}
+            value={stats.unreadMessagesCount}
             color="accent"
             href="/messages"
           />
           <StatCard
             icon={Calendar}
             label="Visites planifiées"
-            value={0}
+            value={stats.scheduledVisitsCount}
             color="warning"
           />
           <StatCard
             icon={Home}
             label="Annonces vues"
-            value={12}
+            value={stats.propertiesViewedCount}
             trend="+3"
             color="primary"
           />

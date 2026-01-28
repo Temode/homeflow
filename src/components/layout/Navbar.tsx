@@ -36,12 +36,6 @@ export default function Navbar() {
             <Link to="/recherche" className="text-slate-700 hover:text-primary transition-colors">
               Rechercher
             </Link>
-            <Link to="/demarcheurs" className="text-slate-700 hover:text-primary transition-colors">
-              Démarcheurs
-            </Link>
-            <Link to="/comment-ca-marche" className="text-slate-700 hover:text-primary transition-colors">
-              Comment ça marche
-            </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -106,21 +100,7 @@ export default function Navbar() {
             >
               Rechercher
             </Link>
-            <Link
-              to="/demarcheurs"
-              className="block py-2 text-slate-700 hover:text-primary transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Démarcheurs
-            </Link>
-            <Link
-              to="/comment-ca-marche"
-              className="block py-2 text-slate-700 hover:text-primary transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Comment ça marche
-            </Link>
-            <div className="pt-3 space-y-2">
+            <div className="pt-3 space-y-2 border-t border-slate-100 mt-3">
               {isAuthenticated ? (
                 <>
                   <Link to="/favoris" onClick={() => setIsMenuOpen(false)}>
