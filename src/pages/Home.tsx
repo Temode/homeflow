@@ -18,8 +18,8 @@ export default function Home() {
   const testimonialsAnimation = useScrollAnimation()
   const propertiesAnimation = useScrollAnimation()
   
-  // Récupérer les 6 premières propriétés actives
-  const { properties, loading } = useProperties({ status: 'active', limit: 6 })
+  // Récupérer les annonces vedettes
+  const { properties, loading } = useProperties({ status: 'active', is_featured: true, limit: 6 })
   
   const stats = [
     { value: '2800+', label: 'Annonces' },

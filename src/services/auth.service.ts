@@ -34,31 +34,52 @@ export const authService = {
     if (authError) throw authError
     if (!authData.user) throw new Error('Failed to create user')
 
-    // Wait a bit for the trigger to create the profile
+    // Le trigger handle_new_user crée automatiquement le profil
+    // On attend un peu puis on récupère le profil créé
     await new Promise(resolve => setTimeout(resolve, 500))
 
-    // Try to fetch the profile (it should exist now thanks to the trigger)
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', authData.user.id)
       .single()
 
-    // If profile doesn't exist yet (rare case), return user without profile
-    // Profile will be available after confirmation/login
-    if (profileError) {
-      console.warn('Profile not found immediately after signup, will be created on confirmation:', profileError)
+    // Si le profil n'existe pas encore, on met à jour avec les infos complètes
+    if (profileError || !profile) {
+      const { data: updatedProfile } = await supabase
+        .from('profiles')
+        .upsert({
+          id: authData.user.id,
+          full_name: fullName,
+          phone,
+          role,
+        })
+        .select()
+        .single()
+
       return {
         id: authData.user.id,
         email: authData.user.email!,
-        profile: null,
+        profile: updatedProfile,
       }
     }
+
+    // Mettre à jour le profil avec les infos complètes (phone n'est pas dans le trigger)
+    const { data: updatedProfile } = await supabase
+      .from('profiles')
+      .update({
+        full_name: fullName,
+        phone,
+        role,
+      })
+      .eq('id', authData.user.id)
+      .select()
+      .single()
 
     return {
       id: authData.user.id,
       email: authData.user.email!,
-      profile,
+      profile: updatedProfile || profile,
     }
   },
 
