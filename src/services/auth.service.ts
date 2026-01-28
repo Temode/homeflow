@@ -33,23 +33,52 @@ export const authService = {
     if (authError) throw authError
     if (!authData.user) throw new Error('Failed to create user')
 
+    // Le trigger handle_new_user crée automatiquement le profil
+    // On attend un peu puis on récupère le profil créé
+    await new Promise(resolve => setTimeout(resolve, 500))
+
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .insert({
+      .select('*')
+      .eq('id', authData.user.id)
+      .single()
+
+    // Si le profil n'existe pas encore, on met à jour avec les infos complètes
+    if (profileError || !profile) {
+      const { data: updatedProfile } = await supabase
+        .from('profiles')
+        .upsert({
+          id: authData.user.id,
+          full_name: fullName,
+          phone,
+          role,
+        })
+        .select()
+        .single()
+
+      return {
         id: authData.user.id,
+        email: authData.user.email!,
+        profile: updatedProfile,
+      }
+    }
+
+    // Mettre à jour le profil avec les infos complètes (phone n'est pas dans le trigger)
+    const { data: updatedProfile } = await supabase
+      .from('profiles')
+      .update({
         full_name: fullName,
         phone,
         role,
       })
+      .eq('id', authData.user.id)
       .select()
       .single()
-
-    if (profileError) throw profileError
 
     return {
       id: authData.user.id,
       email: authData.user.email!,
-      profile,
+      profile: updatedProfile || profile,
     }
   },
 
