@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
-import toast from 'react-hot-toast'
 import { signUpSchema, SignUpFormData } from '../utils/validators'
 import { useAuth } from '../hooks/useAuth'
 import { Input } from '../components/ui/Input'
@@ -22,7 +21,6 @@ export default function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -30,13 +28,10 @@ export default function SignUp() {
     },
   })
 
-  const selectedRole = watch('role')
-
   const onSubmit = async (data: SignUpFormData) => {
     setIsLoading(true)
     try {
       await signUp(data)
-      toast.success('Compte créé avec succès! Bienvenue sur HomeFlow.')
       
       // Redirect based on role or original destination
       if (from) {
@@ -46,21 +41,19 @@ export default function SignUp() {
         // Redirect based on role
         switch (data.role) {
           case 'demarcheur':
-            navigate('/dashboard/demarcheur')
+            navigate('/dashboard/demarcheur', { replace: true })
             break
           case 'visiteur':
           case 'locataire':
           case 'proprietaire':
-            navigate('/dashboard')
+            navigate('/dashboard', { replace: true })
             break
           default:
-            navigate('/')
+            navigate('/', { replace: true })
         }
       }
     } catch (error) {
       console.error(error)
-      const message = error instanceof Error ? error.message : 'Erreur lors de la création du compte'
-      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -117,7 +110,8 @@ export default function SignUp() {
                 {...register('role')}
                 error={errors.role?.message}
               >
-                <option value="locataire">Locataire</option>
+                <option value="visiteur">Visiteur (Je cherche un logement)</option>
+                <option value="locataire">Locataire (J'ai déjà un logement loué)</option>
                 <option value="demarcheur">Démarcheur immobilier</option>
                 <option value="proprietaire">Propriétaire</option>
               </Select>

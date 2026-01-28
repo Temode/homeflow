@@ -24,9 +24,14 @@ export default function SignIn() {
   const onSubmit = async (data: SignInFormData) => {
     setIsLoading(true)
     try {
-      await signIn(data)
-      toast.success('Connexion réussie!')
-      navigate('/')
+      const user = await signIn(data)
+      
+      // Redirect based on user role
+      if (user?.profile?.role === 'demarcheur') {
+        navigate('/dashboard/demarcheur')
+      } else {
+        navigate('/dashboard')
+      }
     } catch (error) {
       console.error(error)
       const message = error instanceof Error ? error.message : 'Erreur de connexion. Vérifiez vos identifiants.'

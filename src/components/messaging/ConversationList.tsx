@@ -19,9 +19,7 @@ export function ConversationList({
   onSelectConversation,
 }: ConversationListProps) {
   const getOtherParticipant = (conversation: Conversation) => {
-    return conversation.participant_1 === currentUserId
-      ? conversation.participant_2_profile
-      : conversation.participant_1_profile
+    return conversation.other_participant
   }
 
   return (
@@ -81,9 +79,9 @@ export function ConversationList({
                     <p className="text-sm text-slate-600 truncate">
                       {conversation.last_message?.content || 'Nouvelle conversation'}
                     </p>
-                    {conversation.unread_count! > 0 && (
+                    {((conversation.participant_1 === currentUserId ? conversation.unread_count_1 : conversation.unread_count_2) > 0) && (
                       <Badge variant="success" className="shrink-0">
-                        {conversation.unread_count}
+                        {conversation.participant_1 === currentUserId ? conversation.unread_count_1 : conversation.unread_count_2}
                       </Badge>
                     )}
                   </div>

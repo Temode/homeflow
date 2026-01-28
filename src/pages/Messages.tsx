@@ -83,13 +83,19 @@ export function Messages() {
         </div>
 
         <div className={`${selectedConversation ? 'flex' : 'hidden md:flex'} flex-1`}>
-          <ChatView
-            conversation={selectedConversation}
-            messages={messages}
-            currentUserId={user!.id}
-            onSendMessage={handleSendMessage}
-            onBack={() => setSelectedConversation(null)}
-          />
+          {selectedConversation ? (
+            <ChatView
+              conversation={selectedConversation}
+              messages={messages}
+              currentUserId={user!.id}
+              onSendMessage={handleSendMessage}
+              onBack={() => setSelectedConversation(null)}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full text-slate-500">
+              <p>Sélectionnez une conversation</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
